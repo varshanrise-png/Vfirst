@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Whiteboard with Slide Color Toggle</title>
+  <style>
+    /* ...[Reuse your previous styling from earlier code]... */
+    body {margin: 0; font-family: Arial, sans-serif; background: #f4f4f4;}
+    .slides-bar {position: absolute; top: 24px; right: 44px; display: flex; gap: 10px;}
+    .slide-btn {padding: 7px 13px; border: none; background: #f0f0f0; color: #444; border-radius: 7px; cursor: pointer;}
+    .slide-btn.active {background: #d1f5d3; color: #187718;}
+    .canvas-frame {background: #fff; border-radius: 13px; box-shadow: 0 2px 10px #ccc;}
+    #canvas {display: block; margin: 0;}
+  </style>
+</head>
+<body>
+  <div class="slides-bar">
+    <button class="slide-btn active">1</button>
+    <button class="slide-btn">+</button>
+    <button class="slide-btn" id="bgToggleBtn" title="Toggle background color">🌓</button>
+  </div>
+  <div class="canvas-frame">
+    <canvas id="canvas" width="700" height="420"></canvas>
+  </div>
+  <script>
+    // Setup for whiteboard (draw mode only for demo)
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let isDark = false;
+
+    // Draw background as white initially
+    function fillBg() {
+      ctx.save();
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = isDark ? '#111' : '#fff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.restore();
+    }
+    fillBg();
+
+    // Drawing (simple pen for demonstration)
+    let drawing = false;
+    canvas.onmousedown = e => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); };
+    canvas.onmousemove = e => {
+      if (drawing) {
+        ctx.strokeStyle = isDark ? '#fff' : '#111';
+        ctx.lineWidth = 2;
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+      }
+    };
+    canvas.onmouseup = () => { drawing = false; };
+
+    // Toggle background button logic
+    document.getElementById('bgToggleBtn').onclick = function() {
+      // Save current drawing as img
+      const oldImg = new Image();
+      oldImg.src = canvas.toDataURL();
+      oldImg.onload = function() {
+        isDark = !isDark;
+        fillBg();
+        ctx.drawImage(oldImg, 0, 0);
+      }
+    };
+  </script>
+</body>
+</html>
