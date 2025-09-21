@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Whiteboard Background Toggle</title>
+  <style>
+    #canvas { border: 1px solid #aaa; background: #fff; }
+    #controls { margin-top: 10px; }
+    button { padding: 8px 15px; }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="800" height="480"></canvas>
+  <div id="controls">
+    <button id="toggleBg">Switch White/Black</button>
+  </div>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let isBlack = false;
+
+    // Fills the entire canvas background with the chosen color
+    function fillBg() {
+      ctx.save();
+      ctx.globalCompositeOperation = "destination-over";
+      ctx.fillStyle = isBlack ? "#111" : "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.restore();
+    }
+    fillBg();
+
+    // Button toggles background and refreshes canvas
+    document.getElementById('toggleBg').onclick = () => {
+      isBlack = !isBlack;
+      fillBg();
+    };
+  </script>
+</body>
+</html>
